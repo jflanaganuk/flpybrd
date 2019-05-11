@@ -16,7 +16,7 @@ pipeNorth.src = "images/pipeNorth.png";
 pipeSouth.src = "images/pipeSouth.png";
 
 var gap = 85;
-var constant = pipeNorth.height+gap;
+var constant;
 
 var fly = new Audio();
 var scor = new Audio();
@@ -32,7 +32,13 @@ var score = 0;
 
 document.addEventListener("mouseup", moveUp);
 
+var playing = false;
+
 function moveUp() {
+    if (!playing){
+        draw();
+        playing = true;
+    }
     bY -= 40;
     fly.play();
 }
@@ -43,10 +49,14 @@ pipe[0] = {
     y: 0
 }
 
+ctx.drawImage(bg, 0, 0);
+ctx.drawImage(bird, bX, bY);
+
 function draw() {
     ctx.drawImage(bg, 0, 0);
 
     for (var i = 0; i < pipe.length; i++) {
+        constant = pipeNorth.height+gap;
         ctx.drawImage(pipeNorth, pipe[i].x, pipe[i].y);
         ctx.drawImage(pipeSouth, pipe[i].x, pipe[i].y+constant);
 
@@ -60,6 +70,7 @@ function draw() {
         }
 
         if (bX + bird.width >= pipe[i].x && bX <= pipe[i].x + pipeNorth.width && (bY <= pipe[i].y + pipeNorth.height || bY + bird.height >= pipe[i].y+constant) || bY + bird.height >= canvas.height - fg.height) {
+            alert("You scored : " + score);
             location.reload();
         }
 
@@ -81,4 +92,3 @@ function draw() {
 
     requestAnimationFrame(draw);
 }
-draw();
